@@ -1,0 +1,11 @@
+FROM detect-cards-base:latest
+LABEL authors="stephen.wille"
+
+WORKDIR /home
+COPY  models ./models
+COPY .flaskenv .
+COPY *.py .
+COPY docker-entrypoint.bash .
+
+ENTRYPOINT ["/bin/bash", "./docker-entrypoint.bash"]
+#ENTRYPOINT ["/bin/bash", "tail", "-f", "/dev/null"]

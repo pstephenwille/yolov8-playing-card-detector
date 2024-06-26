@@ -6,7 +6,7 @@ from ultralytics import YOLO
 
 test_page = Blueprint('test', __name__)
 
-model_path = '/home/stephen/Projects/yolo8/playing-card-detection-yolov8/trained-models/runs-100-gpu/best.pt'
+model_path = './models/best-300.pt'
 model = YOLO(model_path)
 
 
