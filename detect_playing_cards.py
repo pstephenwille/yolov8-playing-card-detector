@@ -1,20 +1,44 @@
 import os
 
-from flask import jsonify
+from flask import jsonify, request
 from flask.blueprints import Blueprint
 from ultralytics import YOLO
+from PIL import Image
 
-test_page = Blueprint('test', __name__)
+cards = Blueprint('cards', __name__)
 
 model_path = './models/best-300.pt'
 model = YOLO(model_path)
 
+def convertToTFLite():
+    wha = model.export(format='tflite')
+    tflite_model = YOLO('./models/best-300.tflite')
+    test = tflite_model('/home/stephen/Projects/yolo8/yolo-detect-playing-card/images/hands/test-3-cards.jpg')
 
-@test_page.route('/test')
-def test_hello_world():  # put application's code here
+
+# convertToTFLite()
+
+@cards.route('/detect-cards', methods=['GET', 'POST'])
+def test():
+    image_stream = request.files['image']
+    img = Image.open(image_stream)
+    results = model.predict(img, show_boxes=True)
+    names = model.names
+    cards = set()
+
+    for r in results:
+        for c in r.boxes.cls:
+            cards.add(names[int(c)])
+
+    return jsonify({'cards': list(cards)})
+
+
+
+@cards.route('/test-image-dir')
+def detect_cards():  # put application's code here
     # img = Image.open('./images/clubs/cards-C2-001.jpg')
-    images_dir = './images/diamonds/'
-    images = list(map(lambda img: images_dir + '/' + img, os.listdir('./images/diamonds')))
+    images_dir = './images/hands/'
+    images = list(map(lambda img: images_dir + '/' + img, os.listdir('images/hands')))
     cards = set()
 
     for img in images:

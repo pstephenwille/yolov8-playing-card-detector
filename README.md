@@ -1,6 +1,10 @@
 # card detection/predcition with Yolov8 model
 
-### setup
+### develop
+1. run the flask app cli: `flask run`
+2. confirm:` curl localhost:6000/test-image-dir` 
+
+### deploy
 1. install nvidia-container-toolkit https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
 
 1. build docker file base
